@@ -8,10 +8,15 @@ fs.readdir(stylesFolder, { withFileTypes: true }, (error, files) => {
   if (error) console.log(error);
   const bundleCssFile = fs.createWriteStream(pathBundleFile);
   files.forEach((file) => {
-    const extName = path.extname(file.name);
-    if (extName === '.css') {
-      const readText = fs.createReadStream(path.join(stylesFolder, file.name));
-      readText.pipe(bundleCssFile);
+    if (file.isFile()) {
+      const extName = path.extname(file.name);
+      if (extName === '.css') {
+        const readText = fs.createReadStream(
+          path.join(stylesFolder, file.name),
+          'utf-8',
+        );
+        readText.pipe(bundleCssFile);
+      }
     }
   });
 });
